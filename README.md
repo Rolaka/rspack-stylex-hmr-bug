@@ -1,19 +1,27 @@
-# rspack-repro
+# rspack-stylex-hmr-bug
 
-- [Rspack website](https://rspack.dev/)
-- [Rspack repo](https://github.com/web-infra-dev/rspack)
+## Description
 
-A GitHub template for creating a Rspack minimal reproducible example.
+This project demonstrates a bug related to StyleX and Hot Module Replacement (HMR) in Rspack during development.
 
-webpack is included for comparing the outputs.
+Specifically, when a compilation error occurs in `src/App.tsx` (e.g., mismatched JSX tags) while running in development mode (`yarn dev:rspack`), the PostCSS styles extracted by StyleX become stuck on the error-ridden version.  Even after fixing the error in `src/App.tsx` or deleting the entire file, the problem persists. The only way to trigger a successful re-compilation of the StyleX styles is to modify `src/style.css`.
 
-## Usages
+## Steps to Reproduce
 
-`pnpm run build` would both run Rspack and webpack with config `./rspack.config.mjs`
+1.  Clone the repository.
+2.  Install dependencies using `yarn` or `pnpm`.
+3.  Run the development server: `yarn dev:rspack` or `pnpm dev:rspack`.
+4.  Introduce a compilation error in `src/App.tsx` (e.g., add an unmatched opening or closing JSX tag).
+5.  Observe the resulting error in the browser and/or terminal.  Note the StyleX-generated CSS reflects the error.
+6.  Fix the `src/App.tsx` file.
+7.  Observe that the browser continues to shows the error from the faulty `src/App.tsx` file via the Stylex-generated CSS.
+8.  Modify `src/style.css` (e.g., add a whitespace, comment out a line, or change a style property).
+9.  Observe that the browser finally re-compiles with the correct StyleX styles.
 
-- Rspack will emits output in `./rspack-dist`
-- webpack will emits output in `./webpack-dist`
+## Project Setup
 
-`./webpack-dist` and `./rspack-dist` are purposely not added to `.gitignore`.
+To start the development server:
 
-It is recommended to commit these files so we quickly compare the outputs.
+```bash
+yarn/pnpm dev:rspack
+```
